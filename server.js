@@ -2,6 +2,8 @@ const request = require("request-promise");
 const cheerio = require("cheerio");
 const express=require('express')
 const app=express()
+const ObjectsToCsv = require("objects-to-csv");
+
 
 const url = "https://sfbay.craigslist.org/d/software-qa-dba-etc/search/sof";
 
@@ -26,7 +28,6 @@ app.get('/',(req,res)=>{
 
       $(".result-info").each((index, element) => {
         const resultTitle = $(element).children(".result-title");
-console.log(resultTitle);
         const title = resultTitle.text();
         const url = resultTitle.attr("href");
         const datePosted = new Date(
@@ -72,7 +73,19 @@ console.log(resultTitle);
   async function scrapeCraigslist() {
     const jobsWithHeaders = await scrapeJobHeader();
     const jobsFullData = await scrapeDescription(jobsWithHeaders);
+    res.json(jobsFullData)
+    // await createCsvFile(jobsFullData);
+
   }
+
+  async function createCsvFile(data) {
+  let csv = new ObjectsToCsv(data);
+
+  await csv.toDisk("./test.csv");
+}
+
+
+
 
 
   scrapeCraigslist()
