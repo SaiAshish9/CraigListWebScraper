@@ -11,7 +11,7 @@ app.get('/', async (req,res)=>{
   const $ = await cheerio.load(htmlResult);
   const scrapeResults = [];
 
-$('h3').each((i,x)=>{
+$('.title').each((i,x)=>{
   scrapeResults.push($(x).html())
 })
 
